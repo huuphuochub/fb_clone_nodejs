@@ -25,6 +25,13 @@ date:{
     default: Date.now,
     required:true,
 },
+username:{
+    type:String,
+    
+},
+avatar:{
+    type:String
+},
 status:{
     type:Number,
     required:true

@@ -55,7 +55,8 @@ const messenger = require('./router/mesenger')
 const postrouter = require('./router/post')
 const folowerrouter = require('./router/folower');
 const likeRouter = require('./router/likerouter');
-const notification = require('./router/notification')
+const notification = require('./router/notification');
+const comment = require('./router/comment')
 
 
 
@@ -66,7 +67,8 @@ app.use('/messenger', messenger);
 app.use('/post', postrouter);
 app.use('/folower', folowerrouter);
 app.use('/like',likeRouter)
-app.use('/notification',notification)
+app.use('/notification',notification);
+app.use('/comment', comment)
 
 
 

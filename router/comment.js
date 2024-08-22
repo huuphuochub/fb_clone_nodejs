@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const Comment = require('../model/comment')
+const Post = require('../model/post')
 const uploadCloud = require('../config/cloud');
 var nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -21,8 +22,26 @@ router.get('/getcommentbypost/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while fetching comments.' });
     }
-});
+}); 
+router.post('/addcmt', uploadCloud.none(), async(req,res) =>{ 
+   try {
+    const add = new Comment({ 
+        id_user:req.body.id_user, 
+        id_post:req.body.id_post, 
+        content:req.body.content 
+    })
+    const adds =await add.save()
+    await Post.findByIdAndUpdate(req.body.id_post,{$inc:{
+        totalcomment:1
+    }})
+ 
+    res.json(true);
+   } catch (error) {
+    res.status(500).json(error)
+   }
+})
 
 
 
-module.exports = router;
+module.exports = router; 
+ 
