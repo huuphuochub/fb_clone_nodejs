@@ -12,7 +12,7 @@ const NotiSchema = new mongoose.Schema({
  },
  id_post:{
     type:String,
-    required:true
+    
  },
  status:{
     type:Number,
@@ -22,13 +22,17 @@ const NotiSchema = new mongoose.Schema({
     type:Date,
     default:Date.now,
     required:true,
+ },
+ type:{
+   type:String,
+   required:true,
  }
 
 }, { timestamps: true });
 
 // Tạo model từ schema
 const Notification = mongoose.model('notification', NotiSchema, 'notification');
-
+ 
 // Xuất model để sử dụng trong các file khác
 module.exports = Notification;
     

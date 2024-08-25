@@ -62,6 +62,21 @@ module.exports = (io) => {
       });
   
 
+      socket.on('offer', (offer) => {
+        console.log(offer)
+        socket.broadcast.emit('offer', offer);
+    });
+
+    socket.on('answer', (answer) => {
+        socket.broadcast.emit('answer', answer);
+    });
+
+    socket.on('ice-candidate', (candidate) => {
+        socket.broadcast.emit('ice-candidate', candidate);
+    });
+
+ 
+
       socket.on('notifyUser',  (id_user, thongbao) => {
         try {
             // Lưu thông báo vào cơ sở dữ liệu
@@ -81,6 +96,29 @@ module.exports = (io) => {
             console.error("Error in notifyUser:", error);
         }
     });
+
+
+
+    
+    socket.on('notifyfriend',  (id_user, thongbao) => {
+      try {
+          // Lưu thông báo vào cơ sở dữ liệu
+          // const addnoti = new Notification({
+          //     id_user: id_user,
+          //     content: thongbao
+          // });
+          // await addnoti.save(); // Chờ lưu thông báo thành công
+  
+          // Gửi thông báo đến các người dùng trực tuyến có id_user trong arruseronl
+          arruseronl.forEach(item => {
+              if (id_user.includes(item.id_user)) {
+                  io.to(item.id_socket).emit('notifyfriend', thongbao);
+              }
+          });
+      } catch (error) {
+          console.error("Error in notifyUser:", error);
+      }
+  });
     
 
 

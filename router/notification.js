@@ -17,6 +17,7 @@ router.post('/add', uploadCloud.none(), async(req,res) =>{
             id_user:req.body.id_user,
             content:req.body.content,
             id_post:req.body.id_post,
+            type:req.body.type,
             status:0,
         })
         await add.save()
@@ -41,14 +42,16 @@ router.get('/getnotibyuser/:id', async (req, res) => {
 });
 router.post('/update', uploadCloud.none(),async(req,res) =>{
     const id = req.body.id;
+    console.log(typeof id);
     console.log(req.body)
     
     try {
         const update = await Notification.findByIdAndUpdate(id,{status:1},{new:true})
         res.json(true)
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json(error) 
     }
-})
-
+})   
+ 
 module.exports = router;
+      

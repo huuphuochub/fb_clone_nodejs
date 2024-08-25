@@ -13,7 +13,7 @@ const removeAccents = require('remove-accents');
 router.post('/addpost', uploadCloud.single('file'), async(req,res)=>{
     // console.log(req.body.status);
     const image = req.file ? req.file.path : req.body.file;
-   
+   console.log(req.body)
    try {
     const post = new Post({
         id_user:req.body.id_user,

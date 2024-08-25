@@ -55,10 +55,13 @@ router.post('/checkemail', uploadCloud.none(), async(req,res) =>{
 })
 
 router.get('/:id', async(req,res) =>{
+  console.log('êh đc nè')
   try {
       const user = await User.findById(req.params.id, req.body)
       res.json(user);
+      console.log(user)
   } catch (error) {
+
       res.status(400).json(false);
   }
 })
@@ -135,7 +138,8 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
                 status:req.body.status,
                 role:0
             })
-            const luu = user.save();
+            const luu = await user.save();
+            console.log(luu)
             res.json(true);
         } catch (error) {
             res.json({thongbao:error});
@@ -198,6 +202,8 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
     router.post('/login', uploadCloud.none(), async (req,res) =>{
       const email = req.body.email;
       const password = req.body.password;
+      console.log('hello')
+      console.log(req.body)
       try{
           const ifUsser = await User.findOne({ email: email });
   

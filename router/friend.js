@@ -77,7 +77,7 @@ res.json(friends);
 
 router.post('/laytatcabancuauser', async(req,res) =>{ 
     const ids = req.body 
-    // console.log("mảng í bạn của bạn " + ids)
+    console.log("mảng í bạn của bạn " + ids)
     const friends = await Friend.find({
         $and: [  
             { status: 2 },
