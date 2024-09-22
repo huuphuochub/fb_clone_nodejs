@@ -7,7 +7,7 @@ module.exports = (io) => {
     
 
       socket.on('online', async( id_user) => {
-        console.log(id_user);
+        // console.log(id_user);
         onlineUsers = { id_user:id_user, id_socket:socket.id} 
         arruseronl.push(onlineUsers) // Lưu trữ socket.id với username
         // console.log(`đã online với id ${socket.id} và id_user là :${id_user}`);
@@ -26,12 +26,12 @@ module.exports = (io) => {
                 friends.push(item.id_user1)
               }
             })
-            console.log(friends)
-            console.log(`iduser ${id_user} có các bạn là ${friends} đang onl`)
+            // console.log(friends)
+            // console.log(`iduser ${id_user} có các bạn là ${friends} đang onl`)
             arruseronl.forEach(user =>{
               if(friends.includes(user.id_user)){
                 io.to(user.id_socket).emit('frienonline',id_user);
-                console.log(`id_user ${id_user} đang onl `)
+                // console.log(`id_user ${id_user} đang onl `)
               }
             })
             let arridfriend =[]
@@ -45,12 +45,12 @@ module.exports = (io) => {
           
         }
         // Gửi danh sách người dùng online cho tất cả các client khác
-        console.log('mangr nhung nguoi dang onlie o duoi')
-        console.log(arruseronl);
+        // console.log('mangr nhung nguoi dang onlie o duoi')
+        // console.log(arruseronl);
         // socket.broadcast.emit('onlineUsers', Object.keys(onlineUsers)); 
       });
 
-      console.log('A user connected');
+      // console.log('A user connected');
   
       // Ví dụ về sự kiện chat message
       socket.on('sendmess', (id_user,id_room) => {
@@ -60,10 +60,65 @@ module.exports = (io) => {
             }
           })
       });
+      socket.on('deleteonline', async(id_user) => {
+        console.log(arruseronl);
+
+        
+        const arruseronls = arruseronl.filter(item => item.id_user ===id_user)
+        console.log(arruseronl);
+        
+        const id_socket = arruseronls[0].id_socket
+
+        let disconnectedUser = null;
+        for(let i = 0; i<arruseronl.length;i++){
+          if(arruseronl[i].id_socket === id_socket){
+            // console.log(`${arruseronl[i].id_user} đã ngắt kết nối`);
+            arruseronl.splice(i, 1); // Xóa người dùng khỏi mảng arruseronl
+            break;
+          }
+        }
+
+         try {
+            const friend = await Friend.find({
+              $or:[
+                {id_user1:id_user,status:2},
+                {id_user2:id_user,status:2}
+              ]
+            });
+            let friends =[]
+            friend.forEach(item=>{
+              if(item.id_user1 === id_user){
+                friends.push(item.id_user2)
+              }else {
+                friends.push(item.id_user1)
+              }
+            })
+            // console.log(friends)
+            // console.log(`iduser ${id_user} có các bạn là ${friends} đang onl`)
+            arruseronl.forEach(user =>{
+              if(friends.includes(user.id_user)){
+                io.to(user.id_socket).emit('friendofline',id_user);
+                // console.log(`id_user ${id_user} đang onl `)
+              }
+            })
+          }catch{
+
+          }
+      
+
+
+
+
+
+    });
   
 
       socket.on('offer', (offer) => {
-        console.log(offer)
+        // console.log(offer)
+        // console.log('đã nhận offer');
+        // console.log(arruseronl);
+        
+        
         socket.broadcast.emit('offer', offer);
     });
 
@@ -71,8 +126,10 @@ module.exports = (io) => {
         socket.broadcast.emit('answer', answer);
     });
 
-    socket.on('ice-candidate', (candidate) => {
-        socket.broadcast.emit('ice-candidate', candidate);
+    socket.on('icecandidate', (candidate) => {
+      // console.log('da nhan ice');
+      
+        socket.broadcast.emit('icecandidate', candidate);
     });
 
  
@@ -130,14 +187,14 @@ module.exports = (io) => {
       // Bạn có thể thêm nhiều sự kiện khác tại đây
       socket.on('disconnect', async() => {
 
-        console.log('Client đã ngắt kết nối');
+        // console.log('Client đã ngắt kết nối');
       
         // Tìm và xóa người dùng khi ngắt kết nối
         let disconnectedUser = null;
         let id_user = ''
         for(let i = 0; i<arruseronl.length;i++){
           if(arruseronl[i].id_socket === socket.id){
-            console.log(`${arruseronl[i].id_user} đã ngắt kết nối`);
+            // console.log(`${arruseronl[i].id_user} đã ngắt kết nối`);
             id_user = arruseronl[i].id_user
             arruseronl.splice(i, 1); // Xóa người dùng khỏi mảng arruseronl
             break;
@@ -159,12 +216,12 @@ module.exports = (io) => {
                 friends.push(item.id_user1)
               }
             })
-            console.log(friends)
-            console.log(`iduser ${id_user} có các bạn là ${friends} đang onl`)
+            // console.log(friends)
+            // console.log(`iduser ${id_user} có các bạn là ${friends} đang onl`)
             arruseronl.forEach(user =>{
               if(friends.includes(user.id_user)){
                 io.to(user.id_socket).emit('friendofline',id_user);
-                console.log(`id_user ${id_user} đang onl `)
+                // console.log(`id_user ${id_user} đang onl `)
               }
             })
           }catch{

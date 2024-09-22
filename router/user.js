@@ -24,8 +24,10 @@ function taoma(){
 
 router.post('/getalluserbyarrid', async(req, res) => {
   const ids = req.body;
+  // console.log('ar id_user');
+  // console.log(ids)
   const ok = ids.toString().split(',').map(id => new mongoose.Types.ObjectId(id.trim())); // Sử dụng 'new'
-  console.log('Mảng ID user cần lấy: ', ok);
+  // console.log('Mảng ID user cần lấy: ', ok);
   const users = await User.find({
     status: 1,  
     _id: { $in: ok } 
@@ -53,13 +55,13 @@ router.post('/checkemail', uploadCloud.none(), async(req,res) =>{
         res.json({thongbao:true});
     }
 })
-
+ 
 router.get('/:id', async(req,res) =>{
-  console.log('êh đc nè')
+  // console.log('êh đc nè')
   try {
       const user = await User.findById(req.params.id, req.body)
       res.json(user);
-      console.log(user)
+      // console.log(user)
   } catch (error) {
 
       res.status(400).json(false);
@@ -69,10 +71,10 @@ router.get('/:id', async(req,res) =>{
 router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
     let email =req.body.email;
     
-    console.log(req.body.email);
+    // console.log(req.body.email);
     taoma();
     
-    console.log(email, maotp)
+    // console.log(email, maotp)
     
       
         if (!email) throw new Error('k có eamail')
@@ -111,10 +113,10 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
 
 
     router.post('/checkma',uploadCloud.none(), function(req,res, next){
-        console.log(req.body);
+        // console.log(req.body);
         var ma = parseInt(req.body.otp);
-        console.log(req.body.otp);
-        console.log(ma, maotp);
+        // console.log(req.body.otp);
+        // console.log(ma, maotp);
         if(maotp == ma){
           res.json({ketqua : true})
         }
@@ -125,8 +127,8 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
 
 
       router.post('/dangky', uploadCloud.none(), async(req,res) =>{
-        console.log(req.body.email);
-        console.log(req.body.password)
+        // console.log(req.body.email);
+        // console.log(req.body.password)
         const salt = await bcrypt.genSalt(10);
     
         const passwords = await bcrypt.hash(req.body.password, salt);
@@ -139,7 +141,7 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
                 role:0
             })
             const luu = await user.save();
-            console.log(luu)
+            // console.log(luu)
             res.json(true);
         } catch (error) {
             res.json({thongbao:error});
@@ -155,7 +157,7 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
       const avatar = req.file ? req.file.path : req.body.file;
       const username = req.body.username;
       const normalizedUsername = removeAccents(username);
-      console.log(normalizedUsername);
+      // console.log(normalizedUsername);
 
     //     console.log(avatar)
     //   console.log(req.body);
@@ -165,9 +167,9 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
         normalizedUsername:normalizedUsername
 
       }
-      console.log(users)
+      // console.log(users)
 
-     try {
+     try { 
         const updatedUser = await User.findOneAndUpdate(
             { email: email }, // Điều kiện tìm kiếm
             { $set:  users },// Cập nhật trường username
@@ -181,11 +183,11 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
 
       router.post('/search', async (req, res) => {
         const { username } = req.body;
-        console.log(username)
+        // console.log(username)
         try {
             // Loại bỏ dấu từ từ khóa tìm kiếm
             const normalizedUsername = removeAccents(username);
-            console.log(normalizedUsername);
+            // console.log(normalizedUsername);
     
             // Tìm kiếm trong bảng users với điều kiện username đã loại bỏ dấu
             const users = await User.find({
@@ -202,8 +204,8 @@ router.post('/xacthuc',uploadCloud.none(), async(req,res) =>{
     router.post('/login', uploadCloud.none(), async (req,res) =>{
       const email = req.body.email;
       const password = req.body.password;
-      console.log('hello')
-      console.log(req.body)
+      // console.log('hello')
+      // console.log(req.body)
       try{
           const ifUsser = await User.findOne({ email: email });
   

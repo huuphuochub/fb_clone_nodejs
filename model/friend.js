@@ -14,6 +14,16 @@ const FriendSchema = new mongoose.Schema({
     type:Number,
     require:true
  },
+ lastPostTimeUser1:{
+   type:Date,
+   default:Date.now,
+   required:true,
+ },
+ lastPostTimeUser2:{
+   type:Date,
+   default:Date.now,
+   require:true,
+ },
  date:{
    type:String,
  }

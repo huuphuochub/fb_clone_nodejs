@@ -11,12 +11,19 @@ const removeAccents = require('remove-accents');
 
 
 router.post('/add', uploadCloud.none(), async(req,res) =>{
-    console.log(req.body);
+    // console.log('hello')
+    // console.log(req.body.id_user);
+    // console.log(req.body.content);
+    // console.log(req.body.id_post);
+    // console.log(req.body.type);
+    // console.log(req.body.id_user);
+
+
     try {
         const add = new Notification({
             id_user:req.body.id_user,
             content:req.body.content,
-            id_post:req.body.id_post,
+            id_post:req.body.id_post ? req.body.id_post : '',
             type:req.body.type,
             status:0,
         })
@@ -42,8 +49,8 @@ router.get('/getnotibyuser/:id', async (req, res) => {
 });
 router.post('/update', uploadCloud.none(),async(req,res) =>{
     const id = req.body.id;
-    console.log(typeof id);
-    console.log(req.body)
+    // console.log(typeof id);
+    // console.log(req.body)
     
     try {
         const update = await Notification.findByIdAndUpdate(id,{status:1},{new:true})

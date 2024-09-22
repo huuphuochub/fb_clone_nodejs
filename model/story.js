@@ -7,6 +7,14 @@ const StorySchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    username:{
+        type:String,
+        required:true,
+    },
+    avatar:{
+        type:String,
+        required:true,
+    },
     linkvideo:{
         type:String,
         required:true,

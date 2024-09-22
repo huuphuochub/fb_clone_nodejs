@@ -13,7 +13,7 @@ const removeAccents = require('remove-accents');
 
 
 router.post('/addlike', uploadCloud.none(), async(req,res )=>{
-    console.log(req.body);
+    // console.log(req.body);
     try {
         const islike = await Like.findOne({id_user:req.body.id_user ,id_post:req.body.id_post});
         if(islike){
@@ -38,7 +38,16 @@ router.post('/addlike', uploadCloud.none(), async(req,res )=>{
         res.status(500).json(error)
     }
 })
-
+router.get('/getlikebypost/:id', async(req,res) =>{
+    try {
+        const like = await Like.find({id_post:req.params.id})
+        .sort({date:-1})
+        .limit(50);
+        res.json(like)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
 router.post('/getalllikeme', uploadCloud.none(), async(req,res) =>{
     const id_user = req.body.id_user;
     const id_post = req.body.id_post;
@@ -48,14 +57,16 @@ router.post('/getalllikeme', uploadCloud.none(), async(req,res) =>{
     const likes = await Like.find({
         id_post: { $in: id_post }, 
         id_user: id_user           
-    });
+    })
+    .sort({date:-1})
+    .limit(100)
         res.json(likes)
 
 
 
 })
 router.post('/deletelike', uploadCloud.none(), async(req,res) =>{
-    console.log(req.body);
+    // console.log(req.body);
     try {
         const deletelike = await Like.findOneAndDelete({id_post:req.body.id_post,id_user:req.body.id_user})
         if(deletelike){

@@ -48,36 +48,102 @@ router.get('/allfriend/:id', async(req,res) =>{
     try {
         const friends = await Friend.find({
             $or: [
-                { id_user1: id },
+                { id_user1: id }, 
                 { id_user2: id }
             ]
         });
-res.json(friends);
+res.json(friends); 
 } catch (error) {
         res.status(500).json(error)
+    }  
+})  
+router.get('/getallfriendbyuser/:id', async(req,res) =>{
+    const id = req.params.id;
+
+    try {
+        const friend = await Friend.find({
+            $or:[
+                {id_user1:id, status:2},
+                {id_user2:id,status:2}
+            ]
+        })
+        res.json(friend);
+    } catch (error) {
+        
     }
 })
-router.get('/getallfriend/:id', async(req,res) =>{
-    const id = req.params.id.toString()
-    // console.log(req.params.id_user)
-// console.log(id)
+router.post('/getallfriendnewfeed/:id', uploadCloud.none(), async(req,res) =>{ 
+    const id = req.params.id.toString();
+
+    let allfriend =[];
+    let page = req.body.page;
+    console.log("pagefriend " + page)
+    const limit = 5;
     try {
         const friends = await Friend.find({
-            $or: [
-                { id_user1: id,status:2 },
-                { id_user2: id, status:2 }
-            ]
-        }); 
-res.json(friends); 
-} catch (error) { 
-        res.status(500).json(error)
-    } 
+             
+                 id_user1: id, status: 2 
+            
+        })
+        .sort({ 
+            lastPostTimeUser2: -1 // Sắp xếp theo thời gian mới nhất
+        })
+        .skip((page -1) *limit)
+        .limit(limit); // Giới hạn số lượng bạn bè lấy về
+        const friendss = await Friend.find({
+          
+                 id_user2: id, status: 2 
+            
+        })
+        .sort({ 
+            lastPostTimeUser1: -1 // Sắp xếp theo thời gian mới nhất
+        })
+        .skip((page -1) *limit)
+        .limit(limit); 
+        // friend1 = friends.filter(item => item.id_user1 == id);
+        // friend2 = friendss.filter(item => item.id_user2 ==id);
+
+        allfriend = [...new Set([...friends,...friendss])]
+
+        res.json(allfriend);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching friends", error });
+    }
 }) 
+
+router.put(`/updatelastPostTimeUser`, uploadCloud.none(), async(req,res) =>{
+    const id = req.body.id;
+    // console.log('id người cần update trong bảng friend là : ' + id)
+    const date = new Date();
+    
+    try {
+        // Cập nhật trường newpostuser1 cho tất cả bạn bè mà id_user1 là id
+        const updateUser1 = await Friend.updateMany(
+            { id_user1: id, status: 2 },
+            { $set: { lastPostTimeUser1: date } }
+        );
+
+        // Cập nhật trường newpostuser2 cho tất cả bạn bè mà id_user2 là id
+        const updateUser2 = await Friend.updateMany(
+            { id_user2: id, status: 2 },
+            { $set: { lastPostTimeUser2: date } }
+        );
+
+        res.json({ 
+            message: "Update successful", 
+            modifiedCountUser1: updateUser1.modifiedCount,
+            modifiedCountUser2: updateUser2.modifiedCount
+        });
+    } catch (error) {
+        console.error("Error details:", error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+})
  
 
 router.post('/laytatcabancuauser', async(req,res) =>{ 
     const ids = req.body 
-    console.log("mảng í bạn của bạn " + ids)
+    // console.log("mảng í bạn của bạn " + ids)
     const friends = await Friend.find({
         $and: [  
             { status: 2 },
@@ -120,7 +186,7 @@ router.get('/getallfriendbyuerr/:id', async(req,res) =>{
 
 router.put('/acpfriend', uploadCloud.none(), async(req,res) =>{
     const id =req.body.id_friend;
-    console.log(id);
+    // console.log(id);
     try {   
         // console.log(id)
         const update = await Friend.findByIdAndUpdate(id,{status:2},{new:true})

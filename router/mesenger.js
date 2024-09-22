@@ -17,8 +17,8 @@ const removeAccents = require('remove-accents');
     const id_users = req.body.id_user;
     const type = req.body.type;
     const lastmess = req.body.lastmess
-    console.log(req.body)
-    console.log("dữ liệu room " + id_users);
+    // console.log(req.body)
+    // console.log("dữ liệu room " + id_users);
   try {
     const newroom = new Room({
         id_user:id_users,type:type,lastmess:lastmess
@@ -31,8 +31,8 @@ const removeAccents = require('remove-accents');
 
 })
 router.post('/addgroupchat', uploadCloud.single('file'), async(req,res) =>{  
-  console.log(req.body.id_user)
-  console.log(req.file.path)
+  // console.log(req.body.id_user)
+  // console.log(req.file.path)
 
   try {
     const room = new Room({
@@ -76,7 +76,7 @@ router.get('/getallgroupchatbyuser/:id', async(req,res) =>{
 
 router.get('/getchatbyroom/:id', async(req,res)=>{
   const id = req.params.id
-  console.log(id)
+  // console.log(id)
   try {
     const chat = await Chat.find({ id_room: id })
     .sort({ date: -1 })
@@ -97,7 +97,7 @@ router.post('/sendchat', uploadCloud.single('file'), async(req,res) =>{
   const status = 1
   const sendstatus = 1;
 
-  console.log(id_room,id_user,content,image,status,sendstatus);
+  // console.log(id_room,id_user,content,image,status,sendstatus);
   try {
     const luu = new Chat({
       id_room:id_room,
@@ -119,9 +119,9 @@ router.post('/sendchat', uploadCloud.single('file'), async(req,res) =>{
       }, 
       { new: true }
   );
-  console.log(update);
+  // console.log(update);
   } catch (error) {
-    console.log(error)
+    // console.log(error)
   }finally{
     res.json(true);
   }

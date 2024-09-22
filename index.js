@@ -12,6 +12,8 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3001;
 
 // Kết nối đến MongoDB
+//mongodb://localhost:27017/tên-database-của-bạn
+// mongo atlas url mongodb+srv://huuphuoc532004:Nhp0503@media.geykc.mongodb.net/media?retryWrites=true&w=majority&appName=media
 mongoose.connect('mongodb://localhost:27017/media', {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -21,10 +23,10 @@ mongoose.connect('mongodb://localhost:27017/media', {
   console.error('MongoDB connection error:', err);
 });
 
-// Middleware để parse JSON
+// Middleware để parse JSON 
 app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(cookieParser()); 
+app.use(bodyParser.json()); 
 app.use(cors({
   origin: '*', // Hoặc chỉ định URL cụ thể nếu cần
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
@@ -33,13 +35,13 @@ app.use(cors({
 }));
 
 // Middleware để thêm header CORS (có thể bỏ qua nếu cors middleware đã được cấu hình)
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Expose-Headers', 'Authorization');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+//   next();
+// });
 
 // Khởi tạo Socket.io
 const io = socketIo(server, {
