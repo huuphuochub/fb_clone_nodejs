@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3001;
 // Kết nối đến MongoDB
 //mongodb://localhost:27017/tên-database-của-bạn
 // mongo atlas url mongodb+srv://huuphuoc532004:Nhp0503@media.geykc.mongodb.net/media?retryWrites=true&w=majority&appName=media
-mongoose.connect('mongodb://localhost:27017/media', {
+mongoose.connect('mongodb+srv://huuphuoc532004:Nhp0503@media.geykc.mongodb.net/media?retryWrites=true&w=majority&appName=media', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

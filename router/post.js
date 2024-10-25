@@ -30,6 +30,17 @@ router.post('/addpost', uploadCloud.single('file'), async(req,res)=>{
         res.status(500).json(error)
    }
 })
+router.get('/getallpostbyuser/:id', async(req,res) =>{
+    const id = req.params.id;
+    console.log(id);
+    
+    try {
+        const posts = await Post.find({id_user:id})
+        res.json(posts)
+    } catch (error) {
+        res.status(500).json(false)
+    }
+})
 router.post('/getpostbyfriend', async(req,res) =>{
     const ids = req.body
     console.log(ids)

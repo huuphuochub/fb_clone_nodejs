@@ -97,6 +97,16 @@ router.post('/sendchat', uploadCloud.single('file'), async(req,res) =>{
   const status = 1
   const sendstatus = 1;
 
+  let lastmesss = '';
+  console.log(image ==='');
+  
+  if(content && image !==''){
+    lastmesss = 'đã gửi 1 ảnh'
+  }else if(!content && image !==''){
+    lastmesss = 'đã gửi 1 ảnh'
+  }else if(content && image === ''){
+    lastmesss = content;
+  }
   // console.log(id_room,id_user,content,image,status,sendstatus);
   try {
     const luu = new Chat({
@@ -110,15 +120,16 @@ router.post('/sendchat', uploadCloud.single('file'), async(req,res) =>{
       sendstatus:sendstatus,
     })
     const save = luu.save();
+
     const update = await Room.findByIdAndUpdate(
       id_room, 
       { 
-          lastmess: content, 
-          lastuser: id_user,
+        lastmess: lastmesss.length > 15 ? lastmesss.substring(0, 15) + '...' : lastmesss,
+        lastuser: id_user,
           date:Date.now(), 
       }, 
       { new: true }
-  );
+  ); 
   // console.log(update);
   } catch (error) {
     // console.log(error)

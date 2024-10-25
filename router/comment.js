@@ -23,12 +23,14 @@ router.get('/getcommentbypost/:id', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching comments.' });
     }
 }); 
-router.post('/addcmt', uploadCloud.none(), async(req,res) =>{ 
+router.post('/addcmt', uploadCloud.single('file'), async(req,res) =>{ 
    try {
+
     const add = new Comment({ 
         id_user:req.body.id_user, 
         id_post:req.body.id_post, 
-        content:req.body.content 
+        content:req.body.content,
+        image: req.file ? req.file.path: ''
     })
     const adds =await add.save()
     await Post.findByIdAndUpdate(req.body.id_post,{$inc:{
@@ -39,6 +41,24 @@ router.post('/addcmt', uploadCloud.none(), async(req,res) =>{
    } catch (error) {
     res.status(500).json(error)
    }
+})
+router.post('/delete/',uploadCloud.none(), async(req,res) =>{
+    const id = req.body.id_cmt;
+    const id_post = req.body.id_post
+    if(!id){
+        res.json({thongbao:'không nhận đc id'})
+    }else{
+        try {
+            const results = await Comment.findByIdAndDelete(id)
+            const trucmt = await Post.findByIdAndUpdate(id_post,{$inc:{
+                totalcomment:-1
+            }})
+            
+            res.json(true)
+        } catch (error) {
+            res.status(500).json(error)
+        }
+    }
 })
 
 

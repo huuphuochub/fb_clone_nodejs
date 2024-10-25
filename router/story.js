@@ -70,6 +70,15 @@ router.post('/getstorybyariduser', uploadCloud.none(), async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+router.get('/getallstorybyuser/:id', async(req,res) =>{
+    const id = req.params.id;
+    try {
+        const storys = await Story.find({id_user:id})
+        res.json(storys)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
 
 
 module.exports = router;
